@@ -1,6 +1,4 @@
-# GestureRecognition
-
-## Gesture Recognition for Interpreting Sign Language
+# Gesture Recognition for Interpreting Sign Language
 
 ## Team SignLang; Schuyler Ng, Gael Gil, Ryan Nguyen
 
@@ -14,14 +12,24 @@
 
 ## Plan:
 
-#### Ensure that webcam works in the program
+#### 1. Ensure that webcam works in the program
 
-#### Detect hand region
+#### 2. Detect hand region
 
-#### Train model on various signs
+#### 3. Train model on various signs
 
-#### Create a GUI for showing the transcription
+#### 4. Create a GUI for showing the transcription
 
-#### Test features
+#### 5. Test features
 
-#### Create presentation and present
+#### 6. Create presentation and present
+
+## MVP:
+
+#### 1. Obtain data set
+
+#### 2. Try to train model on data set
+
+#### 3. Perform data analysis after testing the model
+
+#### 4. Present analysis
