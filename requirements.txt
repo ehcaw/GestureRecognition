@@ -1,4 +1,9 @@
 opencv-python
-pytorch
 numpy
 mediapipe
+matplotlib
+seaborn
+keras
+scikit-learn
+pandas
+torch
