@@ -7,3 +7,5 @@ keras
 scikit-learn
 pandas
 torch
+pathlib
+tensorflow
