@@ -4,6 +4,7 @@ import pickle
 import torch
 from torch import nn
 
+ALPHABET = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
 class SignLanguageCNN(nn.Module):
     def __init__(self):
         super(SignLanguageCNN, self).__init__()
@@ -42,8 +43,6 @@ class VideoCamera(object):
         self.model.load_state_dict(checkpoint["state_dict"])
         self.model.eval()
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-        # capturing video
         self.video = cv2.VideoCapture(0)
 
     def __del__(self):
@@ -52,17 +51,13 @@ class VideoCamera(object):
 
 
     def predict(self, frame):
-        # Preprocess the frame
-        gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        resized_frame = cv2.resize(gray_frame, (224, 224))  # Resize to match the expected input size
+        gray_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) # grayscale
+        resized_frame = cv2.resize(gray_frame, (224, 224))  # resize
         tensor_frame = torch.tensor(resized_frame, dtype=torch.float32).unsqueeze(0).unsqueeze(0).to(self.device)
 
-        # Move model parameters to the same device as the input tensor
         self.model.to(self.device)
 
-        # Pass the frame through the model's Conv1 layer
         with torch.no_grad():
-            # output = self.model.Conv1(tensor_frame)
             outputs=self.model(tensor_frame.to("cuda"))
         
         return outputs
@@ -75,8 +70,8 @@ class VideoCamera(object):
         # print(predictions)
         predicted = torch.softmax(predictions,dim=1)
         _,predicted = torch.max(predicted, 1)
-   
-        print(list(predicted.data.cpu().numpy()))
+        label = predicted.data.cpu().numpy()[0] 
+
 
         ret, jpeg = cv2.imencode('.jpg', im)
-        return jpeg.tobytes()
+        return jpeg.tobytes(), ALPHABET[label]
