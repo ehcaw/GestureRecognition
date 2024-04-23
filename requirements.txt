@@ -1,11 +1,12 @@
-opencv-python
-numpy
+opencv-python~=4.9.0.80
+numpy~=1.26.4
 mediapipe
 matplotlib
 seaborn
 keras
 scikit-learn
 pandas
-torch
+torch~=2.2.2
 pathlib
 tensorflow
+flask
