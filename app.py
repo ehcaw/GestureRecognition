@@ -14,8 +14,8 @@ def gen_frames(camera):
     while True:
         #get camera frame
         frame, label = camera.get_frame()
-        # print(label)
-        # print(frame)
+        print(label)
+        #print(frame)
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 
