@@ -1,8 +1,5 @@
 import cv2
-import numpy as np
-import pickle
 import torch
-from torch import nn
 from MLModel.model_train import SignLanguageCNN
 
 ALPHABET = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
@@ -23,20 +20,23 @@ class VideoCamera(object):
 
     def predict(self, frame):
         resized_frame = cv2.resize(frame, (28, 28))  # resize
+        #resize back up to 224x224 converting all values to be between 0 and 1
         resized_frame = cv2.resize(resized_frame, (224, 224)) / 255.0
+        # finally convert to 4D tensors which then get imput into the model
         tensor_frame = torch.FloatTensor(resized_frame).unsqueeze(0).unsqueeze(0).to(self.device)
 
         self.model.to(self.device)
 
         with torch.no_grad():
-            outputs=self.model(tensor_frame.to("cuda"))
+            output=self.model(tensor_frame.to("cuda"))
         
-        return outputs
+        return output
     
     def get_frame(self):
         # extracting frames
         (rval, im) = self.video.read()
         im = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)  # grayscale
+        # crop down to a 224x224 square in the center of the webcam
         cv2.rectangle(im, (208, 128), (432, 352), (0, 0, 255), 2)
         cropped = im[208:432, 128:352]
         predictions = self.predict(cropped)

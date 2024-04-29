@@ -55,9 +55,9 @@ class SignLanguageCNN(nn.Module):
         self.Conv2 = nn.Sequential(nn.Conv2d(32,64,5),nn.MaxPool2d(2),nn.ReLU(),nn.BatchNorm2d(64))
         # third layer
         self.Conv3 = nn.Sequential(nn.Conv2d(64,128,3),nn.MaxPool2d(2),nn.ReLU(),nn.BatchNorm2d(128))
-        #fourth layer
+        # fourth layer
         self.Conv4 = nn.Sequential(nn.Conv2d(128,256,3),nn.MaxPool2d(2),nn.ReLU(),nn.BatchNorm2d(256))
-        #fifth layer
+        # fifth layer
         self.Conv5 = nn.Sequential(nn.Conv2d(256,512,3),nn.MaxPool2d(2),nn.ReLU(),nn.BatchNorm2d(512))
 
         self.Linear1 = nn.Linear(512*4*4,256)
@@ -78,6 +78,7 @@ class SignLanguageCNN(nn.Module):
         return x
 
 #function to validate and check the accuracy and f1 score of the model
+# we take the model and run the test dataset through
 def validate(val_loader,model):
     model.eval()
     test_labels = [0]
@@ -122,6 +123,7 @@ def train():
         start_epoch=torch.load(checkpoint)['epoch']
     for epoch in range(start_epoch,end_epoch+1):
         start_time = time.time()
+        # loads a group of images from the DataLoader through the model
         for i, (images,labels) in enumerate(train_loader):
             outputs = model(images.to("cuda"))
             loss = criterion(outputs.to("cuda"),labels.to("cuda"))

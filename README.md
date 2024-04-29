@@ -33,3 +33,14 @@
 #### 3. Perform data analysis after testing the model
 
 #### 4. Present analysis
+
+## Description<br>
+We have created a webapp that takes live images of sign language symbols and tries to read and predict the letter being displayed
+
+## To run:
+1. Install required packages from requirements.txt<br>
+2. Run app.py and try to put hand in red box
+
+## Credits:
+Dataset provided from [this](https://www.kaggle.com/datasets/datamunge/sign-language-mnist) competition on Kaggle<br>
+Training model adapted from [Vijay Vignesh P](https://www.kaggle.com/code/vijaypro/cnn-pytorch-96/notebook)
