@@ -23,8 +23,7 @@ class VideoCamera(object):
 
     def predict(self, frame):
         resized_frame = cv2.resize(frame, (28, 28))  # resize
-        gray_frame = cv2.cvtColor(resized_frame, cv2.COLOR_RGB2GRAY)  # grayscale
-        resized_frame = cv2.resize(gray_frame, (224, 224)) / 255.0
+        resized_frame = cv2.resize(resized_frame, (224, 224)) / 255.0
         tensor_frame = torch.FloatTensor(resized_frame).unsqueeze(0).unsqueeze(0).to(self.device)
 
         self.model.to(self.device)
@@ -37,6 +36,7 @@ class VideoCamera(object):
     def get_frame(self):
         # extracting frames
         (rval, im) = self.video.read()
+        im = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)  # grayscale
         cv2.rectangle(im, (208, 128), (432, 352), (0, 0, 255), 2)
         cropped = im[208:432, 128:352]
         predictions = self.predict(cropped)
