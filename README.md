@@ -41,6 +41,13 @@ We have created a webapp that takes live images of sign language symbols and tri
 1. Install required packages from requirements.txt<br>
 2. Run app.py and try to put hand in red box
 
+## To train model:
+
+1. Install pytorch with [cuda](https://pytorch.org/)
+2. Install required packages from requirements.txt<br>
+3. Open model_train.py and set model_file_name
+4. Run model_train.py
+
 ## Presentation<br>
 The presentation can be found [here](https://docs.google.com/presentation/d/1v8K_vxPH-3cagHdaWpYkzuoqBcduskv5j-9c_nP6eZ4/edit?usp=sharing)
 

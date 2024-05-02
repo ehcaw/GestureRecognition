@@ -10,7 +10,7 @@ class VideoCamera(object):
         # load model class
         self.model = SignLanguageCNN() 
         # load the trained model
-        checkpoint = torch.load("./MLModel/Model_test.pt", map_location=torch.device('cpu')) 
+        checkpoint = torch.load("MLModel/SignLanguageModel.pt", map_location=torch.device("cuda" if torch.cuda.is_available() else "cpu"))
         self.model.load_state_dict(checkpoint["state_dict"]) 
          # set model to eval mode
         self.model.eval()
@@ -39,7 +39,7 @@ class VideoCamera(object):
         with torch.no_grad():
             output=self.model(tensor_frame.to("cuda") if torch.cuda.is_available() else tensor_frame.to("cpu"))
         return output # return output
-    
+
     def get_frame(self):
         """
         function to get a frame from the video camera and return it to be used
@@ -48,11 +48,31 @@ class VideoCamera(object):
         # extracting frames
         (rval, im) = self.video.read()
         im = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)  # grayscale
-        # crop down to a 224x224 square in the center of the webcam
-        cv2.rectangle(im, (208, 128), (656, 576), (0, 0, 255), 2) 
-        cropped = im[208:432, 128:352] # crop the image
-        ret, jpeg = cv2.imencode('.jpg', im) # change frame type
-        return jpeg.tobytes() # return frame 
+        return im #return the frame
+
+    # grabs dimensions of the cropped image
+    # outputs the top left point and the bottom right point of the cropped frame
+    def get_dimensions(self,image):
+        height, width = image.shape
+        height //= 2
+        width //= 2
+        top_left_x = width - height // 2
+        top_left_y = height // 2
+        bottom_right_x = width + height // 2
+        bottom_right_y = height + height // 2
+        top_left = (top_left_x, top_left_y)
+        bottom_right = (bottom_right_x, bottom_right_y)
+        return top_left, bottom_right
+
+    def convert_jpeg(self):
+        image = self.get_frame()
+        # dynamically setting a square in the middle of the frame
+        # adds a rectangle to help user see where to put hand
+        top_left, bottom_right = self.get_dimensions(image)
+        image = cv2.cvtColor(image, cv2.COLOR_GRAY2BGR)
+        cv2.rectangle(image, top_left, bottom_right, (0, 0, 255), 2)
+        ret, jpeg = cv2.imencode('.jpg', image) # change frame type
+        return jpeg.tobytes() # return jpeg
 
 
     def get_label(self):
@@ -60,10 +80,10 @@ class VideoCamera(object):
         function to get a labels for an image
         """
         # extracting frames
-        (rval, im) = self.video.read()
-        im = cv2.cvtColor(im, cv2.COLOR_BGR2GRAY)  # grayscale
-        cv2.rectangle(im, (208, 128), (656, 576), (0, 0, 255), 2)
-        cropped = im[208:432, 128:352] # crop the frame from the camera
+        image = self.get_frame()
+        top_left, bottom_right = self.get_dimensions(image)
+        # image[y1:y2,x1:x2]
+        cropped = image[top_left[1]:bottom_right[1],top_left[0]:bottom_right[0]] # crop the frame from the camera
         predictions = self.predict(cropped) # predict from a cropped frame
         predicted = torch.softmax(predictions,dim=1) # get predictions vector
         _,predicted = torch.max(predicted, 1) # get the max value predicted

@@ -7,6 +7,7 @@ from torch import nn
 from torch.utils.data import Dataset
 import numpy as np
 
+model_file_name = 'SignLanguageModel.pt'
 
 class LoadDataset(Dataset):
     def __init__(self, csv, train=True):
@@ -140,9 +141,9 @@ def train():
         scheduler.step(test_accuracy)
 
     # Save the model
-    #saves all part of the model so you can continue training
+    # saves all part of the model so you can continue training
     torch.save({
-    'epoch': epoch, 'state_dict': model.state_dict(), 'optimizer' : optimizer.state_dict()},"SignLanguageModel.pt")
+    'epoch': epoch, 'state_dict': model.state_dict(), 'optimizer' : optimizer.state_dict()}, model_file_name)
 
 if __name__ == '__main__':
     train()
